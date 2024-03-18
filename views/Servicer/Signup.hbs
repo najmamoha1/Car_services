@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign Up Form</title>
+        <link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="css/signup.css">
+    </head>
+    <body>
+
+      <form action="#" method="post" id="signup-form">
+      
+        <h1>Sign Up for Companies</h1>
+        
+        <fieldset>
+          <legend><span class="number">1</span>Your basic info</legend>
+          <label for="name">Name:</label>
+          <input type="text" id="user_name" name="user_name">
+
+          <label for="mail">Email:</label>
+          <input type="email" id="user_email" name="user_email">
+          
+          <label for="password">Password:</label>
+          <input type="password" id="user_password" name="user_password">
+          
+          <label for="password">Confirm Password:</label>
+          <input type="password" id="user_password2" name="user_password2">
+
+        </fieldset>
+        
+        <fieldset>
+          <legend><span class="number">2</span>Your Company Profile</legend>
+          
+          <label for="name">Company Name:</label>
+          <input type="text" id="companyName" name="companyName">
+
+          <label for="name">Company Location:</label>
+          <input type="text" id="companyLocation" name="companyLocation">
+
+          <label for="name">Phone number:</label>
+          <input type="number" id="companyPhone" name="companyPhone">
+        
+        </fieldset>
+
+        <fieldset>
+          <legend><span class="number">3</span>Your Services</legend>
+        
+          <label>Services:</label>
+          <input type="checkbox" id="Car_Service" value="Car_Service" name="Car_Service"><label class="light" for="Car_Service">Car Service</label><br>
+          <input type="checkbox" id="Car_Wash" value="Car_Wash" name="Car_Wash"><label class="light" for="Car_Wash">Car Wash</label><br>
+          <input type="checkbox" id="Car_Paint" value="Car_Paint" name="Car_Paint"><label class="light" for="Car_Paint">Car Paint</label><br>
+          <input type="checkbox" id="Car_Repair" value="Car_Repair" name="Car_Repair"><label class="light" for="Car_Repair">Car Repair</label><br>
+          <input type="checkbox" id="Car_Design" value="Car_Design" name="Car_Design"><label class="light" for="Car_Design">Car Design</label><br>
+
+          
+        
+        </fieldset>
+        <button type="submit">Sign Up</button>
+      </form>
+      
+   <div class="toasts" id="toasts">
+   </div>
+
+    </body>
+    <script src="js/Servicer/signup Servicer.js"></script>
+    <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQiPQVE829TRTQxv27e6iBS6m-_fAJJq8&loading=async&libraries=places&callback=initMap">
+</script>
+</html>

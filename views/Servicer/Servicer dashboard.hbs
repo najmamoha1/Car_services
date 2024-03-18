@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="../../css/Carwash/Carwash dashboard.css">
+    {{!-- <!-- Include the Google Maps JavaScript API -->
+
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQiPQVE829TRTQxv27e6iBS6m-_fAJJq8&loading=async&libraries=places&callback=initMap&v=weekly">
+        </script> --}}
+</head>
+
+<body>
+    {{!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+        <a class="navbar-brand" href="#"><i class="fa fa-dashboard fa-4"></i> Service Provider </a>
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" id="menu-toggle">
+            <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto" id="text">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" id="menu-toggle">
+                    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+                </button>
+            </ul>
+        </div>
+    </nav> --}}
+
+    <nav class="navbar navbar-default no-margin">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header fixed-brand">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" id="menu-toggle">
+                <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-brand" href="#"><i class="fa fa-dashboard fa-4"></i> Service Provider </a>
+        </div>
+        <!-- navbar-header-->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav mr-auto">
+                <li class="active">
+                    <button class="navbar-toggle collapse in" data-toggle="collapse" id="menu-toggle-2"> <span
+                            class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <!-- bs-example-navbar-collapse-1 -->
+    </nav>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+                <li class="active">
+                    <a href="/servicer-dashboard"><span class="fa-stack fa-lg pull-left">
+                            <i class="fa fa-user fa-stack-1x "></i>
+                        </span>Profile</a>
+                </li>
+                <li>
+                    <a href="/servicer-dashboard/my-jobs"><span class="fa-stack fa-lg pull-left"><i
+                                class="fa fa-book fa-stack-1x "></i></span>My Jobs</a>
+                </li>
+                <li>
+                    <a href="/logout"><span class="fa-stack fa-lg pull-left"><i
+                                class="fa fa-power-off fa-stack-1x "></i></span>Logout</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid xyz">
+
+                <form class="float-label" id="submitRequestFrom">
+
+                    <div class="form-group">
+                        <input type="text" id="username" name="username" class="input-field" disabled>
+                        <label for="username" class="float-label">User Name:</label>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="companyName" name="companyName" class="input-field" disabled>
+                        <label for="companyName" class="float-label">Company name:</label>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="email" name="email" class="input-field" disabled>
+                        <label for="email" class="float-label">Email:</label>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="phone" name="phone" class="input-field" disabled>
+                        <label for="phone" class="float-label">Phone number:</label>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="companyLocation" name="companyLocation" class="input-field" disabled>
+                        <label for="companyLocation" class="float-label">Location:</label>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <textarea type="text" id="services" name="services" class="input-field" style="height: 13vh; resize: none;"
+                            disabled></textarea>
+                        <label for="services" class="float-label">Services:</label>
+                    </div>
+
+                </form>
+
+                {{!-- <div id="map" style="height: 400px;"></div> --}}
+                <iframe width="60%" height="250" frameborder="0" style="border:0" id="frame"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+
+
+    <div class="toasts" id="toasts">
+    </div>
+
+
+
+</body>
+
+<script src="../../js/Servicer/Servicer dashboard.js"></script>
+
+<!-- Call the initMap function after the page has loaded -->
+{{!--
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQiPQVE829TRTQxv27e6iBS6m-_fAJJq8&libraries=places&callback=initMap">
+    </script> --}}
+
+
+</html>

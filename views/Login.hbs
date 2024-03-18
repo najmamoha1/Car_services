@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/Login-page.css">
+</head>
+
+<body>
+    {{!-- <img src="../images/auibar_logo_tr.png" alt="" class="logo"> --}}
+    <form id="loginForm" class="float-label">
+        <h3>Car Glass</h3>
+
+        <div class="form-group">
+            <input type="text" placeholder="Email" id="email" name="email" class="input-field">
+            <label for="Email" class="float-label">Email:</label>
+        </div>
+
+        <div class="form-group">
+            <input type="password" placeholder="Password" id="password" name="password" class="input-field">
+            <label for="Password" class="float-label">Password:</label>
+        </div>
+
+        <div class="form-group">
+            <select type="text" id="type" name="type" class="input-field">
+                <option value="">Select a role</option>
+                <option value="Customer">Customer</option>
+                <option value="Servicer">Servicer</option>
+            </select>
+            <label for="type" class="float-label">Role:</label>
+        </div>
+
+        <input type="submit" class="button" value="Login">
+        <p>Don't have an Account? <a href="/signup">Signup</a></p>
+    </form>
+    
+   
+   <div class="toasts" id="toasts">
+   </div>
+
+</body>
+<script src="./js/Login-page.js"></script>
+
+</html>

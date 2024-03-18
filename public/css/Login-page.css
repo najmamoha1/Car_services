@@ -1,0 +1,186 @@
+
+
+*,
+*:before,
+*:after{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-image: url('../images/car service.png');
+    background-size: cover; /* or 'contain' for different sizing options */
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* or 'scroll' for different scrolling behavior */
+}
+/* body{
+    background-color: #006b57; 
+    
+}
+
+.background{
+    width: 430px;
+    height: 520px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+}
+.background .shape{
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    border-radius: 50%;
+} */
+
+form{
+    height: 500px;
+    width: 500px;
+    background-color: rgba(255,255,255,0.13);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 50px 35px;
+}
+form *{
+    font-family: 'Poppins',sans-serif;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+}
+form h3{
+    color: #B4A269;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 42px;
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+
+.float-label .form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.float-label .input-field {
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    width: 100%;
+    color: #888;
+    font-family: 'Lato', 'sans-serif';
+    font-size: 12px;
+    font-weight: 300;
+    background-color: #fff;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+.float-label .float-label {
+    position: absolute;
+    top: 12x;
+    left: 12px;
+    color: #999;
+    /* font-size: 12px; */
+    pointer-events: none;
+    transition: all 0.3s;
+    background-color: transparent;
+    /* background-color: #fff; */
+}
+
+.float-label .input-field:focus+.float-label,
+.float-label .input-field:not(.empty)+.float-label {
+    top: -18px;
+    font-size: 18px;
+    color: #B4A269;
+    background-color: transparent;
+    /* background-color: #fff; */
+    /* padding: 0 5px; */
+}
+
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    background-color: #B4A269;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.button:hover {
+    background-color: #B4A269;
+}
+
+.button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #B4A269;
+}
+
+.button:active {
+    background-color: #fadf88;
+}
+
+.logo{
+   display: block;
+   margin: 0 auto;
+   width: 50vh;
+}
+
+
+.toasts {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    /* bottom: 10px;
+        left: 50%; */
+    z-index: 5000;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.toast {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 0.8em 2em;
+    margin: 0.5em;
+}
+
+
+.toast.info {
+    color: rgb(0, 11, 161);
+    background-color: rgb(217, 230, 255);
+}
+
+.toast.error {
+    color: rgb(148, 0, 0);
+    background-color: rgb(248, 166, 166);
+}
+
+.toast.success {
+    color: rgb(12, 121, 2);
+    background-color: rgb(175, 247, 166);
+}
+
+.toast.warning {
+    color: rgb(167, 28, 3);
+    background-color: rgb(255, 237, 137);
+}
