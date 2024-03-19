@@ -18,8 +18,8 @@
    <script async
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQiPQVE829TRTQxv27e6iBS6m-_fAJJq8&loading=async&libraries=places&callback=initMap&v=weekly">
       </script>
-   {{!--
-   <link rel="icon" href="../images/au logo.png" type="image/x-icon"> --}}
+   <link rel="icon" href="../images/car_server_logo.png" type="image/x-icon">
+
 </head>
 
 <body>
@@ -67,7 +67,7 @@
       <div id="page-content-wrapper">
          <div class="container-fluid xyz">
             <h1>Servicers</h1>
-            
+
             <div class="table-responsive">
 
                <table class="table table-striped table-sm">
@@ -133,13 +133,17 @@
 
                   <div class="form-group" id="locationField" style="display: none;">
 
-                     <input type="text" id="currentLocation" placeholder="Type your current location" class="input-field" />
-                     {{!-- <input type="text" id="currentLocation" placeholder="Type your current location" class="input-field" style="display: none;" /> --}}
+                     <input type="text" id="currentLocation" placeholder="Type your current location"
+                        class="input-field" />
+                     {{!-- <input type="text" id="currentLocation" placeholder="Type your current location"
+                        class="input-field" style="display: none;" /> --}}
                      <label for="currentLocation" class="float-label">Current Location:</label>
-                     <div id="map" style="height: 200px; width:100%;" ></div>
-                     {{!-- <div id="map" style="height: 200px; width:100%; display:none" ></div> --}}
-                     <button type="button" onclick="getCurrentLocationFunction()" id="getCurrentLocation">Get Current Location</button>
-                     {{!-- <button type="button" onclick="getCurrentLocation()" id="getCurrentLocation" style="display: none;">Get Current Location</button> --}}
+                     <div id="map" style="height: 200px; width:100%;"></div>
+                     {{!-- <div id="map" style="height: 200px; width:100%; display:none"></div> --}}
+                     <button type="button" onclick="getCurrentLocationFunction()" id="getCurrentLocation">Get Current
+                        Location</button>
+                     {{!-- <button type="button" onclick="getCurrentLocation()" id="getCurrentLocation"
+                        style="display: none;">Get Current Location</button> --}}
 
                   </div>
 
