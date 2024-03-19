@@ -51,6 +51,21 @@ function isLogged(request, response, next) {
     }
 }
 
+// My functions
+async function fetchDataForRequest(requestID) {
+    const query = `SELECT * FROM requests WHERE ID = ?`;
+    return new Promise((resolve, reject) => {
+        connection.query(query, [requestID], (error, results) => {
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(results);
+            }
+        });
+    });
+}
+
 const connection = mysql.createConnection({
     host: process.env.host,
     user: process.env.user,
@@ -92,24 +107,33 @@ app.get('/customer-dashobard/view-servicers', isLogged, (request, response) => {
     response.render('Customer/View Servicers')
 })
 
+// Customer viewing request details
+app.get('/customer-dashboard/request-details', isLogged, (request, response) => {
+    // const requestID = request.query.requestID;
+    response.render('Customer/Request Details')
+    // fetchDataForRequest(requestID) 
+    //     .then(requestData => {
+    //         // Render the page with fetched data
+    //         response.render('Customer/Request Details');  
+    //     })
+    //     .catch(error => {
+    //         // Handle errors fetching data
+    //         console.error('Error fetching data:', error);
+    //         response.status(500).send("Error fetching request details"); 
+    //     });
+})
+
+
+
 // Customer their requests
 app.get('/get-customer-requests', (request, response) => {
-    // const query = `SELECT r.ID,r.Date,r.Purpose,r.Description,r.Pickup,r.Customer_Location,r.Geolocation, r.LocationOfService,s.UserName,s.CompanyName, 
-    // FROM 
-    //     requests r
-    // LEFT JOIN
-    //     servicers s
-    // ON r.Servicer_Email = s.Email
-    // WHERE r.Customer_Email = ?
-    // `
-
     const query = `
     SELECT r.Date, r.ID, r.Purpose, r.Description, r.Pickup, 
-        r.Customer_Location, r.LocationOfService, 
+        r.Customer_Location, r.LocationOfService, r.Status, 
         s.UserName, s.CompanyName
         FROM requests r
-        JOIN servicers s ON r.Servicer_Email = s.Email;
-
+        JOIN servicers s ON r.Servicer_Email = s.Email
+        WHERE r.Customer_Email = ?;
     `
     // const query = `SELECT * FROM requests WHERE Customer_Email = ?`
     connection.query(query, [request.session.user.Email], (error, results) => {
@@ -123,6 +147,30 @@ app.get('/get-customer-requests', (request, response) => {
     })
 })
 
+//Seding to customers the details of a request
+app.get('/request-details/:requestID', (request, response) => {
+    const {requestID} = request.params;
+    console.log(requestID)
+    // const query = `SELECT * FROM requests WHERE ID = ?`;
+    const query = `
+    SELECT r.Date, r.ID, r.Purpose, r.Description, r.Pickup, 
+        r.Customer_Location, r.LocationOfService, r.Status, r.GeoLocation,
+        s.UserName, s.CompanyName, s.Email, s.Phone
+        FROM requests r
+        JOIN servicers s ON r.Servicer_Email = s.Email
+        WHERE r.ID = ?;
+    `
+    connection.query(query, [requestID], (error, results) => {
+        if (error) {
+            console.log(error)
+            response.status(500).json({ message: 'Error' })
+        }
+        else {
+            results[0].Email = decEmail(results[0].Email)
+            response.status(200).json({ message: 'Success', data: results })
+        }
+    })
+})
 
 //Send all servicers
 app.get('/get-all-servicers', (request, response) => {
@@ -157,6 +205,31 @@ app.get('/get-serivcer-data', (request, response) => {
         }
     })
 })
+
+
+// Servicers their requests
+app.get('/get-servicer-requests', (request, response) => {
+    console.log("GOT HERE")
+    const query = `
+    SELECT r.Date, r.ID, r.Purpose, r.Description, r.Pickup, 
+        r.Customer_Location, r.LocationOfService, r.Status, 
+        s.UserName, s.CompanyName
+        FROM requests r
+        JOIN servicers s ON r.Servicer_Email = s.Email
+        WHERE r.Servicer_Email = ?;
+    `
+    // const query = `SELECT * FROM requests WHERE Customer_Email = ?`
+    connection.query(query, [request.session.user.Email], (error, results) => {
+        if (error) {
+            console.log(error)
+            response.status(500).json({ message: 'Error' })
+        }
+        else {
+            response.status(200).json({ message: 'Success', data: results })
+        }
+    })
+})
+
 
 // Logout
 
@@ -240,9 +313,9 @@ app.post('/request-car', (request, response) => {
     console.log(request.body)
     const { date, location, purpose, description, pickup, currentLocation, position, email } = request.body;
     console.log(request.session.user)
-    const { First_Name, Email } = request.session.user;
-    const query = `INSERT INTO requests (ID, Customer_Email, Servicer_Email, Date, Purpose, Description, Pickup, Customer_Location, Geolocation, Customer_Name, LocationOfService) VALUES (?,?,?,?,?,?,?,?,?,?,?)`;
-    connection.query(query, [uuid(), Email, EncEmail(email), date, purpose, description, pickup, currentLocation, JSON.stringify(position), First_Name, location], (error, results) => {
+    const { Email } = request.session.user;
+    const query = `INSERT INTO requests (ID, Customer_Email, Servicer_Email, Date, Purpose, Description, Pickup, Customer_Location, Geolocation, Status, LocationOfService) VALUES (?,?,?,?,?,?,?,?,?,?,?)`;
+    connection.query(query, [uuid(), Email, EncEmail(email), date, purpose, description, pickup, currentLocation, JSON.stringify(position), "PENDING", location], (error, results) => {
         if (error) {
             console.log(error)
             response.status(500).json({ message: 'Error' })
@@ -253,6 +326,35 @@ app.post('/request-car', (request, response) => {
     })
 })
 //Put Methods
+
+//Cancelling a request
+app.put('/cancel-request', (request, response) => {
+    const { requestID } = request.body;
+    const query = `UPDATE requests SET Status = 'CANCELLED' WHERE ID = ?`;
+    connection.query(query, [requestID], (error, results) => {
+        if (error) {
+            response.status(500).json({ message: 'Error' })
+        }
+        else {
+            response.status(201).json({ message: 'Success' })
+        }
+    })
+})
+
+//Rejecting a request
+app.put('/reject-request', (request, response) => {
+    const { requestID } = request.body;
+    const query = `UPDATE requests SET Status = 'REJECTED' WHERE ID = ?`;
+    connection.query(query, [requestID], (error, results) => {
+        if (error) {
+            response.status(500).json({ message: 'Error' })
+        }
+        else {
+            response.status(201).json({ message: 'Success' })
+        }
+    })
+})
+
 
 //Delete Methods
 

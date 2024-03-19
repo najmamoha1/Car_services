@@ -62,42 +62,28 @@
         <div id="page-content-wrapper">
             <div class="container-fluid xyz">
 
-                <form class="float-label" id="submitRequestFrom">
 
-                    <div class="form-group">
-                        <input type="text" id="username" name="username" class="input-field" disabled>
-                        <label for="username" class="float-label">User Name:</label>
-                    </div>
+            <h1>My Requests</h1>
+            <div class="table-responsive">
 
-                    <div class="form-group">
-                        <input type="text" id="companyName" name="companyName" class="input-field" disabled>
-                        <label for="companyName" class="float-label">Company name:</label>
-                    </div>
+               <table class="table table-striped table-sm">
+                  <thead>
+                     <tr>
+                        <th>Date</th>
+                        <th>Place of service</th>
+                        <th>Location</th>
+                        <th>Purpose</th>
+                        <th>Description</th>
+                        <th>Pickup Car</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                     </tr>
+                  </thead>
+                  <tbody id="table">
 
-                    <div class="form-group">
-                        <input type="text" id="email" name="email" class="input-field" disabled>
-                        <label for="email" class="float-label">Email:</label>
-                    </div>
-
-                    <div class="form-group">
-                        <input type="text" id="phone" name="phone" class="input-field" disabled>
-                        <label for="phone" class="float-label">Phone number:</label>
-                    </div>
-
-                    <div class="form-group">
-                        <input type="text" id="companyLocation" name="companyLocation" class="input-field" disabled>
-                        <label for="companyLocation" class="float-label">Location:</label>
-                    </div>
-
-
-
-                    <div class="form-group">
-                        <textarea type="text" id="services" name="services" class="input-field" style="height: 13vh; resize: none;"
-                            disabled></textarea>
-                        <label for="services" class="float-label">Services:</label>
-                    </div>
-
-                </form>
+                  </tbody>
+               </table>
+            </div>
 
                 {{!-- <div id="map" style="height: 400px;"></div> --}}
                 <iframe width="60%" height="250" frameborder="0" style="border:0" id="frame"

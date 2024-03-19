@@ -48,3 +48,115 @@ function initMenu() {
 $(document).ready(function () {
     initMenu();
 });
+
+
+
+async function getServicerRequests() {
+    const response = await fetch('/get-servicer-requests');
+    const data = await response.json();
+    // return data;
+    console.log(data.data);
+
+    if (response.status === 500) {
+        createNotification('Error getting requests', 'error');
+    }
+
+
+    // console.log(JSON.parse(data.data[0]['Services']))
+    populateData(data.data)
+}
+getServicerRequests();
+
+
+function populateData(requests) {
+    const table = document.getElementById('table');
+    table.innerHTML = "";
+    requests.forEach((request) => {
+        const row = document.createElement('tr');
+        const date = document.createElement('td');
+        date.innerText = request.Date;
+        const location = document.createElement('td');
+        location.innerText = request.LocationOfService;
+        const serviceLocation = document.createElement('td');
+        serviceLocation.innerText = request.Customer_Location || "N/A";
+        const purpose = document.createElement('td');
+        purpose.innerText = request.Purpose;
+        const description = document.createElement('td');
+        description.innerText = request.Description;
+        const pickup = document.createElement('td');
+        pickup.innerText = request.Pickup;
+        const status = document.createElement('td');
+        status.innerText = request.Status;
+        if (request.Status === "PENDING") {
+            status.style.color = 'orange';
+        }
+        if (request.Status === "COMPLETED") {
+            status.style.color = 'green';
+        }
+        if (request.Status === "REJECTED" || request.Status === "CANCELLED") {
+            status.style.color = 'red';
+        }
+
+
+        const actions = document.createElement('td')
+
+
+        const moreInfo = document.createElement('button');
+        moreInfo.innerText = "More Info";
+
+
+        const rejectButton = document.createElement('button');
+        rejectButton.innerText = "Reject";
+
+        rejectButton.onclick = async () => {
+
+            if (confirm(`Are you sure you want to reject this request? \nNote that this action cannot be undone.`)) {
+                console.log("Reject request " + request.ID)
+                await rejectRequest(request.ID);
+            }
+            else {
+                console.log("Don't reject request " + request.ID)
+                return;
+            }
+        }
+
+        actions.appendChild(moreInfo);
+
+        if (request.Status === "PENDING") {
+            actions.appendChild(rejectButton);
+
+        }
+
+        // row.appendChild(date,location,purpose,description,pickup);
+        row.appendChild(date)
+        row.appendChild(location)
+        row.appendChild(serviceLocation)
+        row.appendChild(purpose)
+        row.appendChild(description)
+        row.appendChild(pickup)
+        row.appendChild(status)
+        row.appendChild(actions)
+        table.appendChild(row);
+    });
+}
+
+
+async function rejectRequest(requestID) {
+    const response = await fetch('/reject-request', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ requestID })
+    });
+
+    const data = await response.json();
+
+    if (response.status === 500) {
+        createNotification('Error rejecting request', 'error');
+    }
+    else {
+        createNotification('Request rejected successfully', 'success');
+        getServicerRequests()
+    }
+}
