@@ -15,19 +15,6 @@ const createNotification = (message, type) => {
     }, 3000);
 };
 
-
-let map;
-let autocomplete;
-
-function initMap() {
-    // Initialize the autocomplete for the input field
-    autocomplete = new google.maps.places.Autocomplete(
-        document.getElementById('companyLocation'),
-        { types: ['geocode'] }
-    );
-}
-
-
 document.getElementById('signup-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const form = e.target;
@@ -36,14 +23,13 @@ document.getElementById('signup-form').addEventListener('submit', (e) => {
     for (let [key, value] of formData) {
         data[key] = value;
     }
-    data['geoLocation'] = autocomplete.getPlace().geometry.location.toJSON();
     console.log(data);
-    
+
     if(data.user_password !== data.user_password2) {
         createNotification('Passwords do not match', 'warning');
         return;
     }
-    fetch('/signup-servicer', {
+    fetch('/signup-customer', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -60,11 +46,11 @@ document.getElementById('signup-form').addEventListener('submit', (e) => {
                 }, 3000);
             }
             else {
-                createNotification('Error creating account', 'error');
+                createNotification(data.message, 'warning');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            createNotification('Error creating account', 'error');
+            createNotification(data.message, 'error');
         });
 });

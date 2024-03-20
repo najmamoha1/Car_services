@@ -87,6 +87,11 @@ app.get('/signup-servicer', (request, response) => {
     response.render('Servicer/Signup')
 })
 
+// Signup for customers
+app.get('/signup-customer', (request, response) => {
+    response.render('Customer/Signup')
+})
+
 // Servicer dashboard
 app.get('/servicer-dashboard', isLogged, (req, res) => {
     res.render('Servicer/Servicer dashboard')
@@ -109,21 +114,8 @@ app.get('/customer-dashobard/view-servicers', isLogged, (request, response) => {
 
 // Customer viewing request details
 app.get('/customer-dashboard/request-details', isLogged, (request, response) => {
-    // const requestID = request.query.requestID;
     response.render('Customer/Request Details')
-    // fetchDataForRequest(requestID) 
-    //     .then(requestData => {
-    //         // Render the page with fetched data
-    //         response.render('Customer/Request Details');  
-    //     })
-    //     .catch(error => {
-    //         // Handle errors fetching data
-    //         console.error('Error fetching data:', error);
-    //         response.status(500).send("Error fetching request details"); 
-    //     });
 })
-
-
 
 // Customer their requests
 app.get('/get-customer-requests', (request, response) => {
@@ -149,7 +141,7 @@ app.get('/get-customer-requests', (request, response) => {
 
 //Seding to customers the details of a request
 app.get('/request-details/:requestID', (request, response) => {
-    const {requestID} = request.params;
+    const { requestID } = request.params;
     console.log(requestID)
     // const query = `SELECT * FROM requests WHERE ID = ?`;
     const query = `
@@ -266,6 +258,28 @@ app.post('/signup-servicer', (request, response) => {
     })
 })
 
+//Signup for customers
+app.post('/signup-customer', (request, response) => {
+    console.log(request.body)
+    const { fname, lname, phoneNumber, user_email, user_password } = request.body;
+    const query = `INSERT INTO customers (First_Name, Last_Name, Email, Password, Phone) VALUES (?, ?, ?, ?, ?)`;
+    connection.query(query, [fname, lname, EncEmail(user_email), EncPass(user_password), phoneNumber], (error, results) => {
+        if (error) {
+            if (error.errno === 1062) {
+                console.log(error)
+                return response.status(401).json({ message: 'Email already exists' })
+            }
+            else {
+                console.log(error)
+                response.status(500).json({ message: 'Error' })
+            }
+        }
+        else {
+            response.status(200).json({ message: 'Success' })
+        }
+    })
+})
+
 // Login for servicers
 app.post('/login-servicer', (request, response) => {
     const { email, password } = request.body;
@@ -278,6 +292,7 @@ app.post('/login-servicer', (request, response) => {
         else {
             if (results.length > 0) {
                 request.session.user = results[0];
+                request.session.user.type = 'servicer'
                 return response.status(200).json({ message: 'Success' })
             }
             else {
@@ -299,6 +314,7 @@ app.post('/login-customer', (request, response) => {
             else {
                 if (results.length > 0) {
                     request.session.user = results[0];
+                    request.session.user.type = 'servicer'
                     return response.status(200).json({ message: 'Success' })
                 }
                 else {
