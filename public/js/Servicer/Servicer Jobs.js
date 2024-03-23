@@ -90,7 +90,7 @@ function populateData(requests) {
         if (request.Status === "PENDING") {
             status.style.color = 'orange';
         }
-        if (request.Status === "COMPLETED") {
+        if (request.Status === "ACCEPTED") {
             status.style.color = 'green';
         }
         if (request.Status === "REJECTED" || request.Status === "CANCELLED") {
@@ -120,13 +120,32 @@ function populateData(requests) {
             }
         }
 
+        
+        const acceptButton = document.createElement('button');
+        acceptButton.innerText = "Accept";
+
+        acceptButton.onclick = async () => {
+                
+                if (confirm(`Are you sure you want to accept this request?`)) {
+                    console.log("Accept request " + request.ID)
+                    await acceptRequest(request.ID);
+                }
+                else {
+                    console.log("Don't accept request " + request.ID)
+                    return;
+                }
+            }
+
+
         actions.appendChild(moreInfo);
 
         if (request.Status === "PENDING") {
             actions.appendChild(rejectButton);
-
         }
-
+        
+        if (request.Status === "PENDING") {
+            actions.appendChild(acceptButton);
+        }
         // row.appendChild(date,location,purpose,description,pickup);
         row.appendChild(date)
         row.appendChild(location)
@@ -157,6 +176,26 @@ async function rejectRequest(requestID) {
     }
     else {
         createNotification('Request rejected successfully', 'success');
+        getServicerRequests()
+    }
+}
+
+async function acceptRequest(requestID) {
+    const response = await fetch('/accept-request', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ requestID })
+    });
+
+    const data = await response.json();
+
+    if (response.status === 500) {
+        createNotification('Error accepting request', 'error');
+    }
+    else {
+        createNotification('Request accepted successfully', 'success');
         getServicerRequests()
     }
 }

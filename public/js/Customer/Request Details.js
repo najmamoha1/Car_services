@@ -108,32 +108,6 @@ function initMap(myLatlng={lat: -1.283736488774029, lng: 36.8207174882673}) {
     });
 
     marker.setMap(map);
-    // let infoWindow = new google.maps.InfoWindow({
-    //     // content: "Click the map to get Lat/Lng!",
-    //     // position: myLatlng,
-    // });
-
-    // Place a draggable marker on the map
-    // var marker = new google.maps.Marker({
-    //     // position: myLatlng,
-    //     map: map,
-    //     draggable: true,
-    //     title: "Drag me!"
-    // });
-    // infoWindow.open(map);
-    // Initialize the autocomplete for the input field
-    // autocomplete = new google.maps.places.Autocomplete(
-    //     document.getElementById('currentLocation'),
-    //     { types: ['geocode'] }
-    // );
-    // // Place a draggable marker on the map
-    // marker = new google.maps.Marker({
-    //     // position: myLatlng,
-    //     map: map,
-    //     draggable: true,
-    //     title: "Drag me!"
-    // });
-
     //get marker position and store in hidden input
     google.maps.event.addListener(marker, 'dragend', function (evt) {
         // document.getElementById("latInput").value = evt.latLng.lat();

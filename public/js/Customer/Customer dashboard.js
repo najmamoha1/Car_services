@@ -85,7 +85,7 @@ function populateData(requests) {
         if (request.Status === "PENDING") {
             status.style.color = 'orange';
         }
-        if (request.Status === "COMPLETED") {
+        if (request.Status === "ACCEPTED") {
             status.style.color = 'green';
         }
         if (request.Status === "REJECTED" || request.Status === "CANCELLED") {

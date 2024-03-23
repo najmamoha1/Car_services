@@ -109,12 +109,12 @@ app.get('/customer-dashboard', isLogged, (req, res) => {
 
 // Customer Viewing Servicers
 app.get('/customer-dashobard/view-servicers', isLogged, (request, response) => {
-    response.render('Customer/View Servicers')
+    response.render('Customer/View Servicers',{apiKey:process.env.apiKey})
 })
 
 // Customer viewing request details
 app.get('/customer-dashboard/request-details', isLogged, (request, response) => {
-    response.render('Customer/Request Details')
+    response.render('Customer/Request Details',{apiKey:process.env.apiKey})
 })
 
 // Customer their requests
@@ -361,6 +361,20 @@ app.put('/cancel-request', (request, response) => {
 app.put('/reject-request', (request, response) => {
     const { requestID } = request.body;
     const query = `UPDATE requests SET Status = 'REJECTED' WHERE ID = ?`;
+    connection.query(query, [requestID], (error, results) => {
+        if (error) {
+            response.status(500).json({ message: 'Error' })
+        }
+        else {
+            response.status(201).json({ message: 'Success' })
+        }
+    })
+})
+
+//Accepting a request
+app.put('/accept-request', (request, response) => {
+    const { requestID } = request.body;
+    const query = `UPDATE requests SET Status = 'ACCEPTED' WHERE ID = ?`;
     connection.query(query, [requestID], (error, results) => {
         if (error) {
             response.status(500).json({ message: 'Error' })
