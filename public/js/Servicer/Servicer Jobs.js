@@ -104,6 +104,10 @@ function populateData(requests) {
         const moreInfo = document.createElement('button');
         moreInfo.innerText = "More Info";
 
+        moreInfo.onclick = () => {
+            window.location.href = `/servicer-request-details?requestID=${request.ID}`;
+        }
+
 
         const rejectButton = document.createElement('button');
         rejectButton.innerText = "Reject";

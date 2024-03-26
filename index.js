@@ -102,6 +102,11 @@ app.get('/servicer-dashboard/my-jobs', isLogged, (req, res) => {
     res.render('Servicer/Servicer Jobs')
 })
 
+//Servicer Request Details
+app.get('/servicer-request-details', isLogged, (req, res) => {
+    res.render('Servicer/Request Details')
+})
+
 // Customer dashboard
 app.get('/customer-dashboard', isLogged, (req, res) => {
     res.render('Customer/Customer dashboard')
@@ -232,6 +237,47 @@ app.get('/logout', (request, response) => {
         response.clearCookie('user')
         response.clearCookie('User_Session')
         response.redirect('/')
+    })
+})
+
+app.get('/get-servicer-requests-detail/:requestID',(request,response)=>{
+    console.log(request.session.user.Email)
+    console.log(request.params)
+    const {requestID} = request.params
+    const query = `
+    SELECT r.Date, r.ID, r.Purpose, r.Description, r.Pickup,
+        r.Customer_Location, r.LocationOfService, r.Status, r.GeoLocation,
+        c.First_Name, c.Last_Name, c.Email, c.Phone
+        FROM requests r
+        JOIN customers c ON r.Customer_Email = c.Email
+        WHERE r.ID = ? AND r.Servicer_Email = ?;
+    `
+//     const query = `
+//     SELECT 
+//     requests.date, 
+//     requests.ID, 
+//     requests.Purpose, 
+//     requests.Description, 
+//     requests.Pickup,
+//     requests.Customer_Location, 
+//     requests.LocationOfService,
+//     requests.Status,
+//     customers.Phone, 
+//     customers.First_Name, 
+//     customers.Last_Name, 
+//     customers.Email
+// FROM requests
+// INNER JOIN customers ON requests. = customers.Email;
+//     `
+    connection.query(query, [requestID,request.session.user.Email], (error, results) => {
+        if (error) {
+            console.log(error)
+            response.status(500).json({ message: 'Error' })
+        }
+        else {
+            results[0].Email = decEmail(results[0].Email)   
+            response.status(200).json({ message: 'Success', data: results })
+        }
     })
 })
 
