@@ -15,8 +15,9 @@ const uuid = require('uuid4')
 const mysql = require('mysql2');
 const oneDay = 1000 * 60 * 60 * 24;
 const { EncEmail, decEmail, EncPass, decPassword } = require('./Security')
-// var Fakerator = require("fakerator");
-// var fakerator = Fakerator("en-US");
+
+console.log(decPassword('d6368af23cf27205c78a1300eb308d27'))
+console.log(decEmail('2788ea766f7f1736607e1ae3318b720ef94109e26652e35283b3bb3a0eb1e6f4'))
 
 // cookie parser middleware
 app.use(cookieParser());
@@ -49,21 +50,6 @@ function isLogged(request, response, next) {
     else {
         response.redirect('/')
     }
-}
-
-// My functions
-async function fetchDataForRequest(requestID) {
-    const query = `SELECT * FROM requests WHERE ID = ?`;
-    return new Promise((resolve, reject) => {
-        connection.query(query, [requestID], (error, results) => {
-            if (error) {
-                reject(error);
-            }
-            else {
-                resolve(results);
-            }
-        });
-    });
 }
 
 const connection = mysql.createConnection({
@@ -189,7 +175,6 @@ app.get('/get-all-servicers', (request, response) => {
 app.get('/get-serivcer-data', (request, response) => {
     const { Email } = request.session.user;
     const query = `SELECT * FROM servicers WHERE Email = ?`;
-    // const query = `SELECT First_Name,Last_Name,Email,Phone,Services FROM users WHERE Email = ?`;
     connection.query(query, [Email], (error, results) => {
         if (error) {
             response.status(500).json({ message: 'Error' })
@@ -351,7 +336,7 @@ app.post('/login-servicer', (request, response) => {
 //Login for customers
 app.post('/login-customer', (request, response) => {
     const { email, password } = request.body;
-    const query = `SELECT * FROM users WHERE Email = ? AND Password = ?`;
+    const query = `SELECT * FROM customers WHERE Email = ? AND Password = ?`;
     connection.query(query, [EncEmail(email), EncPass(password)],
         (error, results) => {
             if (error) {
