@@ -15,9 +15,7 @@ const uuid = require('uuid4')
 const mysql = require('mysql2');
 const oneDay = 1000 * 60 * 60 * 24;
 const { EncEmail, decEmail, EncPass, decPassword } = require('./Security')
-
-console.log(decPassword('d6368af23cf27205c78a1300eb308d27'))
-console.log(decEmail('2788ea766f7f1736607e1ae3318b720ef94109e26652e35283b3bb3a0eb1e6f4'))
+const {sendStatus,sendEmail} = require('./Mailing')
 
 // cookie parser middleware
 app.use(cookieParser());
@@ -113,7 +111,7 @@ app.get('/get-customer-requests', (request, response) => {
     const query = `
     SELECT r.Date, r.ID, r.Purpose, r.Description, r.Pickup, 
         r.Customer_Location, r.LocationOfService, r.Status, 
-        s.UserName, s.CompanyName
+        s.UserName, s.CompanyName, s.Email
         FROM requests r
         JOIN servicers s ON r.Servicer_Email = s.Email
         WHERE r.Customer_Email = ?;
@@ -125,6 +123,9 @@ app.get('/get-customer-requests', (request, response) => {
             response.status(500).json({ message: 'Error' })
         }
         else {
+            results.forEach((result) => {
+                result.Email = decEmail(result.Email)
+            })
             response.status(200).json({ message: 'Success', data: results })
         }
     })
@@ -194,10 +195,12 @@ app.get('/get-servicer-requests', (request, response) => {
     console.log("GOT HERE")
     const query = `
     SELECT r.Date, r.ID, r.Purpose, r.Description, r.Pickup, 
-        r.Customer_Location, r.LocationOfService, r.Status, 
-        s.UserName, s.CompanyName
+        r.Customer_Location, r.LocationOfService, r.Status, r.Customer_Email, 
+        s.UserName, s.CompanyName,
+        c.First_Name, c.Last_Name 
         FROM requests r
         JOIN servicers s ON r.Servicer_Email = s.Email
+        JOIN customers c ON r.Customer_Email = c.Email
         WHERE r.Servicer_Email = ?;
     `
     // const query = `SELECT * FROM requests WHERE Customer_Email = ?`
@@ -207,6 +210,9 @@ app.get('/get-servicer-requests', (request, response) => {
             response.status(500).json({ message: 'Error' })
         }
         else {
+            results.forEach((result) => {
+                result.Customer_Email = decEmail(result.Customer_Email)
+            })
             response.status(200).json({ message: 'Success', data: results })
         }
     })
@@ -237,23 +243,6 @@ app.get('/get-servicer-requests-detail/:requestID',(request,response)=>{
         JOIN customers c ON r.Customer_Email = c.Email
         WHERE r.ID = ? AND r.Servicer_Email = ?;
     `
-//     const query = `
-//     SELECT 
-//     requests.date, 
-//     requests.ID, 
-//     requests.Purpose, 
-//     requests.Description, 
-//     requests.Pickup,
-//     requests.Customer_Location, 
-//     requests.LocationOfService,
-//     requests.Status,
-//     customers.Phone, 
-//     customers.First_Name, 
-//     customers.Last_Name, 
-//     customers.Email
-// FROM requests
-// INNER JOIN customers ON requests. = customers.Email;
-//     `
     connection.query(query, [requestID,request.session.user.Email], (error, results) => {
         if (error) {
             console.log(error)
@@ -318,6 +307,7 @@ app.post('/login-servicer', (request, response) => {
     const query = `SELECT * FROM servicers WHERE Email = ? AND Password = ?`;
     connection.query(query, [EncEmail(email), EncPass(password)], (error, results) => {
         if (error) {
+            console.log(error)
             response.status(500).json({ message: 'Error' })
         }
         else {
@@ -358,16 +348,17 @@ app.post('/login-customer', (request, response) => {
 // User submitting request
 app.post('/request-car', (request, response) => {
     console.log(request.body)
-    const { date, location, purpose, description, pickup, currentLocation, position, email } = request.body;
+    const { date, location, purpose, description, pickup, currentLocation, position, email,servicer_name } = request.body;
     console.log(request.session.user)
-    const { Email } = request.session.user;
+    const { Email, First_Name, Last_Name } = request.session.user;
     const query = `INSERT INTO requests (ID, Customer_Email, Servicer_Email, Date, Purpose, Description, Pickup, Customer_Location, Geolocation, Status, LocationOfService) VALUES (?,?,?,?,?,?,?,?,?,?,?)`;
-    connection.query(query, [uuid(), Email, EncEmail(email), date, purpose, description, pickup, currentLocation, JSON.stringify(position), "PENDING", location], (error, results) => {
+    connection.query(query, [uuid(), Email, EncEmail(email), date, purpose, description, pickup, currentLocation, JSON.stringify(position), "PENDING", location], async (error, results) => {
         if (error) {
             console.log(error)
             response.status(500).json({ message: 'Error' })
         }
         else {
+            await sendEmail({receiver:email,subject:"New Request",text:`You have a new request from ${First_Name} ${Last_Name} about ${purpose} on ${date} at ${location} with the following description: ${description} `,recipientName:servicer_name,senderName:First_Name})
             response.status(200).json({ message: 'Success' })
         }
     })
@@ -376,13 +367,16 @@ app.post('/request-car', (request, response) => {
 
 //Cancelling a request
 app.put('/cancel-request', (request, response) => {
-    const { requestID } = request.body;
+    const { requestID,username,purpose,description,servicer_email } = request.body;
+    console.log(request.body)
+    const {First_Name,Last_Name} = request.session.user
     const query = `UPDATE requests SET Status = 'CANCELLED' WHERE ID = ?`;
-    connection.query(query, [requestID], (error, results) => {
+    connection.query(query, [requestID], async (error, results) => {
         if (error) {
             response.status(500).json({ message: 'Error' })
         }
         else {
+            await sendEmail({receiver:servicer_email,subject:"Request Cancelled",text:`Your request about ${purpose} with the following description: ${description} has been cancelled by ${First_Name} ${Last_Name}`,recipientName:username,senderName:First_Name})
             response.status(201).json({ message: 'Success' })
         }
     })
@@ -390,13 +384,15 @@ app.put('/cancel-request', (request, response) => {
 
 //Rejecting a request
 app.put('/reject-request', (request, response) => {
-    const { requestID } = request.body;
+    const { requestID, customerEmail,firstName,purpose,date,description,companyName } = request.body;
+    const { UserName} = request.session.user;
     const query = `UPDATE requests SET Status = 'REJECTED' WHERE ID = ?`;
     connection.query(query, [requestID], (error, results) => {
         if (error) {
             response.status(500).json({ message: 'Error' })
         }
         else {
+            sendEmail({receiver:customerEmail,subject:"Request Rejected",text:`Your request about ${purpose} on ${date} with the following description: ${description} has been rejected by ${UserName} from ${companyName}`,recipientName:firstName,senderName:UserName})
             response.status(201).json({ message: 'Success' })
         }
     })
@@ -404,13 +400,15 @@ app.put('/reject-request', (request, response) => {
 
 //Accepting a request
 app.put('/accept-request', (request, response) => {
-    const { requestID } = request.body;
+    const { requestID, customerEmail,firstName,purpose,date,description,companyName } = request.body;
+    const { UserName} = request.session.user;
     const query = `UPDATE requests SET Status = 'ACCEPTED' WHERE ID = ?`;
-    connection.query(query, [requestID], (error, results) => {
+    connection.query(query, [requestID], async (error, results) => {
         if (error) {
             response.status(500).json({ message: 'Error' })
         }
         else {
+            sendEmail({receiver:customerEmail,subject:"Request Accepted",text:`Your request about ${purpose} on ${date} with the following description: ${description} has been accepted by ${UserName} from ${companyName}`,recipientName:firstName,senderName:UserName})
             response.status(201).json({ message: 'Success' })
         }
     })

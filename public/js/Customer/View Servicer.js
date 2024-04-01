@@ -200,6 +200,8 @@ function populateData(servicers){
         request.addEventListener('click', ()=>{
             const comp = document.getElementById('comp')
             comp.innerText = servicer.CompanyName
+            const servicer_name = document.getElementById('servicer-name')
+            servicer_name.innerText = servicer.UserName
             document.getElementById('submitRequestFrom').setAttribute('data-id', servicer.Email)
             purpose.innerHTML = "<option value = ''> Please select an option </option>"
 
@@ -276,6 +278,7 @@ document.getElementById('submitRequestFrom').addEventListener('submit', async (e
     const description = document.getElementById('description').value;
     const pickup = document.getElementById('pickup').value;
     const email = e.target.getAttribute('data-id');
+    const servicer_name = document.getElementById('servicer-name').innerText;
     // console.log(marker.position)
     const position = {
         lat: marker.position.lat(),
@@ -290,7 +293,8 @@ document.getElementById('submitRequestFrom').addEventListener('submit', async (e
             purpose,
             description,
             pickup,
-            email
+            email,
+            servicer_name
         }
     }
     else{
@@ -302,19 +306,10 @@ document.getElementById('submitRequestFrom').addEventListener('submit', async (e
             description,
             pickup,
             position,
-            email
+            email,
+            servicer_name
         }
     }
-    // const data = {
-    //     date,
-    //     location,
-    //     currentLocation,
-    //     purpose,
-    //     description,
-    //     pickup,
-    //     position,
-    //     email
-    // }
     console.log(data)
     const response = await fetch('/request-car', {
         method: 'POST',

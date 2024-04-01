@@ -70,6 +70,8 @@ function populateData(requests) {
         const row = document.createElement('tr');
         const date = document.createElement('td');
         date.innerText = request.Date;
+        const company = document.createElement('td');
+        company.innerText = request.CompanyName;
         const location = document.createElement('td');
         location.innerText = request.LocationOfService;
         const serviceLocation = document.createElement('td');
@@ -112,7 +114,7 @@ function populateData(requests) {
 
             if (confirm(`Are you sure you want to cancel this request? \nNote that this action cannot be undone.`)) {
                 console.log("Cancel request " + request.ID)
-                await cancelRequest(request.ID);
+                await cancelRequest(request.ID, request.UserName,request.Purpose,request.Description,request.Email);
             }
             else {
                 console.log("Don't cancel request " + request.ID)
@@ -129,6 +131,7 @@ function populateData(requests) {
 
         // row.appendChild(date,location,purpose,description,pickup);
         row.appendChild(date)
+        row.appendChild(company)
         row.appendChild(location)
         row.appendChild(serviceLocation)
         row.appendChild(purpose)
@@ -140,13 +143,13 @@ function populateData(requests) {
     });
 }
 
-async function cancelRequest(requestID) {
+async function cancelRequest(requestID,username,purpose,description,servicer_email) {
     const response = await fetch('/cancel-request', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ requestID })
+        body: JSON.stringify({ requestID,username,purpose,description,servicer_email })
     });
 
     const data = await response.json();

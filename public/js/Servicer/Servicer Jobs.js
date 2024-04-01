@@ -1,6 +1,5 @@
 
 // Notifications
-
 const toasts = document.querySelector('#toasts');
 
 const createNotification = (message, type) => {
@@ -116,7 +115,7 @@ function populateData(requests) {
 
             if (confirm(`Are you sure you want to reject this request? \nNote that this action cannot be undone.`)) {
                 console.log("Reject request " + request.ID)
-                await rejectRequest(request.ID);
+                await rejectRequest(request.ID, request.Customer_Email,request.First_Name,request.Purpose,request.Date,request.Description,request.CompanyName);
             }
             else {
                 console.log("Don't reject request " + request.ID)
@@ -132,7 +131,7 @@ function populateData(requests) {
                 
                 if (confirm(`Are you sure you want to accept this request?`)) {
                     console.log("Accept request " + request.ID)
-                    await acceptRequest(request.ID);
+                    await acceptRequest(request.ID, request.Customer_Email,request.First_Name,request.Purpose,request.Date,request.Description,request.CompanyName);
                 }
                 else {
                     console.log("Don't accept request " + request.ID)
@@ -164,13 +163,13 @@ function populateData(requests) {
 }
 
 
-async function rejectRequest(requestID) {
+async function rejectRequest(requestID,customerEmail,firstName,purpose,date,description,companyName) {
     const response = await fetch('/reject-request', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ requestID })
+        body: JSON.stringify({ requestID, customerEmail,firstName,purpose,date,description,companyName})
     });
 
     const data = await response.json();
@@ -184,13 +183,13 @@ async function rejectRequest(requestID) {
     }
 }
 
-async function acceptRequest(requestID) {
+async function acceptRequest(requestID,customerEmail,firstName,purpose,date,description,companyName) {
     const response = await fetch('/accept-request', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ requestID })
+        body: JSON.stringify({ requestID,customerEmail,firstName,purpose,date,description,companyName})
     });
 
     const data = await response.json();
