@@ -31,7 +31,7 @@ async function sendStatus({receiver, subject, text,recipientName, senderName}) {
   <table style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0 auto; border-collapse: collapse; width: 600px; background-color: #ffffff;">
     <tr>
       <td style="padding: 20px; background-color: #f9f9f9;">
-        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f5/Emblem_of_the_African_Union.svg/300px-Emblem_of_the_African_Union.svg.png" alt="Your Logo" style="display: block; margin: 0 auto; max-width: 230px; height: 200px;">
+        <img src="https://firebasestorage.googleapis.com/v0/b/app4035-project.appspot.com/o/car_server_logo.png?alt=media&token=9cf86e42-7c7d-4943-817d-dbc8f2355622" alt="Your Logo" style="display: block; margin: 0 auto; max-width: 230px; height: 200px;">
 
         <h1 style="color: #333;">Hello, ${recipientName}!</h1>
       </td>
@@ -76,7 +76,7 @@ async function sendEmail({receiver, subject, text,recipientName, senderName}) {
   <table style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0 auto; border-collapse: collapse; width: 600px; background-color: #ffffff;">
     <tr>
       <td style="padding: 20px; background-color: #f9f9f9;">
-        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f5/Emblem_of_the_African_Union.svg/300px-Emblem_of_the_African_Union.svg.png" alt="Your Logo" style="display: block; margin: 0 auto; max-width: 230px; height: 200px;">
+        <img src="https://firebasestorage.googleapis.com/v0/b/app4035-project.appspot.com/o/car_server_logo.png?alt=media&token=9cf86e42-7c7d-4943-817d-dbc8f2355622" alt="Your Logo" style="display: block; margin: 0 auto; max-width: 230px; height: 200px;">
 
         <h1 style="color: #333;">Hello, ${recipientName}!</h1>
       </td>

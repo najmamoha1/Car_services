@@ -418,5 +418,5 @@ app.put('/accept-request', (request, response) => {
 //Delete Methods
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`)
+    console.log(`Server is running on port ${port}\nhttp://localhost:${port}`)
 })
