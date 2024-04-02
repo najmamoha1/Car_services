@@ -9,7 +9,7 @@
 }
 
 body{
-    background-image: url('../images/car service.png');
+    background-image: url('../images/cwbg.jpg');
     background-size: cover; /* or 'contain' for different sizing options */
     background-repeat: no-repeat;
     background-attachment: fixed; /* or 'scroll' for different scrolling behavior */
