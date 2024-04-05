@@ -20,6 +20,14 @@ document.getElementById('signup-form').addEventListener('submit', (e) => {
     const form = e.target;
     const formData = new FormData(form);
     const data = {};
+    
+    // verify if any field is empty
+    for (let [key, value] of formData) {
+        if (value === '') {
+            createNotification('Please fill all fields', 'warning');
+            return;
+        }
+    }
     for (let [key, value] of formData) {
         data[key] = value;
     }

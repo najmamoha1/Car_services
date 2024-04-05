@@ -324,6 +324,7 @@ document.getElementById('submitRequestFrom').addEventListener('submit', async (e
         createNotification(res.message,'error')
     }
     else{
+        window.location.reload()
         createNotification(res.message,'success')
     }
 })

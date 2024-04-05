@@ -32,6 +32,13 @@ document.getElementById('signup-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
+    // verify if any field is empty
+    for (let [key, value] of formData) {
+        if (value === '') {
+            createNotification('Please fill all fields', 'warning');
+            return;
+        }
+    }
     const data = {};
     for (let [key, value] of formData) {
         data[key] = value;
@@ -60,11 +67,11 @@ document.getElementById('signup-form').addEventListener('submit', (e) => {
                 }, 3000);
             }
             else {
-                createNotification('Error creating account', 'error');
+                createNotification(data.message, 'error');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            createNotification('Error creating account', 'error');
+            createNotification(data.message, 'error');
         });
 });
