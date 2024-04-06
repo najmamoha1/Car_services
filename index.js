@@ -123,9 +123,6 @@ app.get('/get-customer-requests', (request, response) => {
             response.status(500).json({ message: 'Error' })
         }
         else {
-            results.forEach((result) => {
-                result.Email = decEmail(result.Email)
-            })
             response.status(200).json({ message: 'Success', data: results })
         }
     })
@@ -150,7 +147,6 @@ app.get('/request-details/:requestID', (request, response) => {
             response.status(500).json({ message: 'Error' })
         }
         else {
-            results[0].Email = decEmail(results[0].Email)
             response.status(200).json({ message: 'Success', data: results })
         }
     })
@@ -164,9 +160,6 @@ app.get('/get-all-servicers', (request, response) => {
             response.status(500).json({ message: 'Error' })
         }
         else {
-            results.forEach((result) => {
-                result.Email = decEmail(result.Email)
-            })
             response.status(200).json({ message: 'Success', data: results })
         }
     })
@@ -183,7 +176,6 @@ app.get('/get-serivcer-data', (request, response) => {
         else {
             console.log(results)
             delete results[0].Password
-            results[0].Email = decEmail(results[0].Email)
             response.status(200).json({ message: 'Success', data: results })
         }
     })
@@ -210,9 +202,6 @@ app.get('/get-servicer-requests', (request, response) => {
             response.status(500).json({ message: 'Error' })
         }
         else {
-            results.forEach((result) => {
-                result.Customer_Email = decEmail(result.Customer_Email)
-            })
             response.status(200).json({ message: 'Success', data: results })
         }
     })
@@ -249,7 +238,6 @@ app.get('/get-servicer-requests-detail/:requestID',(request,response)=>{
             response.status(500).json({ message: 'Error' })
         }
         else {
-            results[0].Email = decEmail(results[0].Email)   
             response.status(200).json({ message: 'Success', data: results })
         }
     })
@@ -262,7 +250,7 @@ app.post('/signup-servicer', (request, response) => {
     console.log(request.body)
     const { user_name, user_email, user_password, companyName, companyLocation, Car_Service, Car_Wash, Car_Paint, Car_Repair, Car_Design, geoLocation, companyPhone } = request.body;
     const query = `INSERT INTO servicers (UserName, Email, Password, CompanyName, CompanyLocation, Car_Service, Car_Wash, Car_Painting, Car_Repair, Car_Design, geoLocation,Phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    connection.query(query, [user_name, EncEmail(user_email), EncPass(user_password), companyName, companyLocation, Car_Service ? 1 : null, Car_Wash ? 1 : null, Car_Paint ? 1 : null, Car_Repair ? 1 : null, Car_Design ? 1 : null, JSON.stringify(geoLocation), companyPhone], (error, results) => {
+    connection.query(query, [user_name, user_email, EncPass(user_password), companyName, companyLocation, Car_Service ? 1 : null, Car_Wash ? 1 : null, Car_Paint ? 1 : null, Car_Repair ? 1 : null, Car_Design ? 1 : null, JSON.stringify(geoLocation), companyPhone], (error, results) => {
         if (error) {
             if (error.errno === 1062) {
                 return response.status(500).json({ message: 'Email already exists' })
@@ -283,7 +271,7 @@ app.post('/signup-customer', (request, response) => {
     console.log(request.body)
     const { fname, lname, phoneNumber, user_email, user_password } = request.body;
     const query = `INSERT INTO customers (First_Name, Last_Name, Email, Password, Phone) VALUES (?, ?, ?, ?, ?)`;
-    connection.query(query, [fname, lname, EncEmail(user_email), EncPass(user_password), phoneNumber], (error, results) => {
+    connection.query(query, [fname, lname, user_email, EncPass(user_password), phoneNumber], (error, results) => {
         if (error) {
             if (error.errno === 1062) {
                 console.log(error)
@@ -305,7 +293,7 @@ app.post('/login-servicer', (request, response) => {
     const { email, password } = request.body;
     console.log(request.body)
     const query = `SELECT * FROM servicers WHERE Email = ? AND Password = ?`;
-    connection.query(query, [EncEmail(email), EncPass(password)], (error, results) => {
+    connection.query(query, [email, EncPass(password)], (error, results) => {
         if (error) {
             console.log(error)
             response.status(500).json({ message: 'Error' })
@@ -327,7 +315,7 @@ app.post('/login-servicer', (request, response) => {
 app.post('/login-customer', (request, response) => {
     const { email, password } = request.body;
     const query = `SELECT * FROM customers WHERE Email = ? AND Password = ?`;
-    connection.query(query, [EncEmail(email), EncPass(password)],
+    connection.query(query, [email, EncPass(password)],
         (error, results) => {
             if (error) {
                 response.status(500).json({ message: 'Error' })
@@ -352,7 +340,7 @@ app.post('/request-car', (request, response) => {
     console.log(request.session.user)
     const { Email, First_Name, Last_Name } = request.session.user;
     const query = `INSERT INTO requests (ID, Customer_Email, Servicer_Email, Date, Purpose, Description, Pickup, Customer_Location, Geolocation, Status, LocationOfService) VALUES (?,?,?,?,?,?,?,?,?,?,?)`;
-    connection.query(query, [uuid(), Email, EncEmail(email), date, purpose, description, pickup, currentLocation, JSON.stringify(position), "PENDING", location], async (error, results) => {
+    connection.query(query, [uuid(), Email, email, date, purpose, description, pickup, currentLocation, JSON.stringify(position), "PENDING", location], async (error, results) => {
         if (error) {
             console.log(error)
             response.status(500).json({ message: 'Error' })
